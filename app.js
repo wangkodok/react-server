@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors"); // CORS
 const bodyParser = require("body-parser");
 
 const { getStoredPosts, storePosts } = require("./data/posts");
@@ -8,14 +9,22 @@ const path = require("path");
 
 app.use(bodyParser.json());
 
-app.use((req, res, next) => {
-  // Attach CORS headers
-  // Required when using a detached backend (that runs on a different domain)
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  next();
-});
+// app.use((req, res, next) => {
+//   // Attach CORS headers
+//   // Required when using a detached backend (that runs on a different domain)
+//   res.setHeader("Access-Control-Allow-Origin", "*");
+//   res.setHeader("Access-Control-Allow-Methods", "GET,POST");
+//   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+//   next();
+// });
+
+// CORS
+app.use(
+  cors({
+    origin: true, // 모든 출처 허용 옵션 "*" 를 써도 된다.
+    credential: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
+  })
+);
 
 app.set("views", path.join(__dirname, "/"));
 app.set("view engine", "ejs");
