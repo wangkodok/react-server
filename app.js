@@ -1,4 +1,5 @@
 const express = require("express");
+const { createProxyMiddleware } = require("http-proxy-middleware");
 const cors = require("cors"); // CORS
 const bodyParser = require("body-parser");
 
@@ -26,6 +27,16 @@ app.use(
     optionsSuccessStatus: 200,
   })
 );
+
+module.exports = function (app) {
+  app.use(
+    "/",
+    createProxyMiddleware({
+      target: "http://127.0.0.1:5173",
+      changeOrigin: true,
+    })
+  );
+};
 
 app.set("views", path.join(__dirname, "/"));
 app.set("view engine", "ejs");
