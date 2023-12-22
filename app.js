@@ -10,24 +10,24 @@ const path = require("path");
 
 app.use(bodyParser.json());
 
-// app.use((req, res, next) => {
-//   // Attach CORS headers
-//   // Required when using a detached backend (that runs on a different domain)
-//   res.setHeader("Access-Control-Allow-Origin", "*");
-//   res.setHeader("Access-Control-Allow-Methods", "GET,POST");
-//   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-//   next();
-// });
+app.use((req, res, next) => {
+  // Attach CORS headers
+  // Required when using a detached backend (that runs on a different domain)
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
 
 // CORS
-// app.use(
-//   cors({
-//     origin: "*", // 모든 출처 허용 옵션 true 를 써도 된다.
-//     credentials: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
-//     optionsSuccessStatus: 200,
-//   })
-// );
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://127.0.0.1:5173", // 모든 출처 허용 옵션 true 를 써도 된다.
+    credentials: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
+    // optionsSuccessStatus: 200,
+  })
+);
+// app.use(cors());
 
 // module.exports = function (app) {
 //   app.use(
