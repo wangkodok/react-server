@@ -22,7 +22,7 @@ app.use((req, res, next) => {
 // CORS
 app.use(
   cors({
-    origin: "http://127.0.0.1:5173", // 모든 출처 허용 옵션 true 를 써도 된다.
+    origin: "https://classy-cendol-a32dcd.netlify.app", // 모든 출처 허용 옵션 true 를 써도 된다.
     credentials: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
     // optionsSuccessStatus: 200,
   })
