@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 // CORS
 app.use(
   cors({
-    origin: true, // 모든 출처 허용 옵션 "*" 를 써도 된다.
+    origin: "*", // 모든 출처 허용 옵션 true 를 써도 된다.
     credential: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
   })
 );
