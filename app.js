@@ -1,5 +1,5 @@
 const express = require("express");
-const { createProxyMiddleware } = require("http-proxy-middleware");
+// const { createProxyMiddleware } = require("http-proxy-middleware");
 const cors = require("cors"); // CORS
 const bodyParser = require("body-parser");
 
@@ -20,23 +20,24 @@ app.use(bodyParser.json());
 // });
 
 // CORS
-app.use(
-  cors({
-    origin: "*", // 모든 출처 허용 옵션 true 를 써도 된다.
-    credentials: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
-    optionsSuccessStatus: 200,
-  })
-);
+// app.use(
+//   cors({
+//     origin: "*", // 모든 출처 허용 옵션 true 를 써도 된다.
+//     credentials: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
+//     optionsSuccessStatus: 200,
+//   })
+// );
+app.use(cors());
 
-module.exports = function (app) {
-  app.use(
-    "/",
-    createProxyMiddleware({
-      target: "http://127.0.0.1:5173",
-      changeOrigin: true,
-    })
-  );
-};
+// module.exports = function (app) {
+//   app.use(
+//     "/",
+//     createProxyMiddleware({
+//       target: "http://127.0.0.1:5173",
+//       changeOrigin: true,
+//     })
+//   );
+// };
 
 app.set("views", path.join(__dirname, "/"));
 app.set("view engine", "ejs");
