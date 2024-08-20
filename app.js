@@ -2,6 +2,7 @@ const express = require("express");
 // const { createProxyMiddleware } = require("http-proxy-middleware");
 const cors = require("cors"); // CORS
 const bodyParser = require("body-parser");
+const axios = require("axios");
 
 const { getStoredPosts, storePosts } = require("./data/posts");
 
@@ -25,6 +26,7 @@ app.use(
     origin: [
       // "http://127.0.0.1:5173",
       "https://classy-cendol-a32dcd.netlify.app",
+      "https://korean-dictionary-three.vercel.app",
     ], // 모든 출처 허용 옵션 true 를 써도 된다.
     credentials: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
     // optionsSuccessStatus: 200,
@@ -59,6 +61,20 @@ app.get("/posts/:id", async (req, res) => {
   const storedPosts = await getStoredPosts();
   const post = storedPosts.find((post) => post.id === req.params.id);
   res.json({ post });
+});
+
+// 표준국어대사전 get
+const { API_KEY } = process.env;
+const externalApiUrl = `https://stdict.korean.go.kr/api/search.do?certkey_no=6715&key=${API_KEY}&type_search=search&req_type=json&q=`;
+console.log(externalApiUrl);
+app.get("/fetch-data", async (req, res) => {
+  const { query } = req.query;
+  try {
+    const response = await axios.get(`${externalApiUrl}${query}`);
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).send("Error fetching data from external API");
+  }
 });
 
 app.post("/posts", async (req, res) => {
