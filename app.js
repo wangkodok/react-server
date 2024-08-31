@@ -1,5 +1,7 @@
 const express = require("express");
 // const { createProxyMiddleware } = require("http-proxy-middleware");
+const dotenv = require("dotenv"); //
+dotenv.config(); // node에서 .env 파일 이용하려면 dotenv 설치하고 코드 작성
 const cors = require("cors"); // CORS
 const bodyParser = require("body-parser");
 const axios = require("axios");
@@ -65,12 +67,15 @@ app.get("/posts/:id", async (req, res) => {
 
 // 표준국어대사전 get
 const { API_KEY } = process.env;
-const externalApiUrl = `https://stdict.korean.go.kr/api/search.do?certkey_no=6715&key=${API_KEY}&type_search=search&req_type=json&q=`;
+// console.log(API_KEY);
+const externalApiUrl = `https://stdict.korean.go.kr/api/search.do?key=${API_KEY}&type_search=search&req_type=json&q=`;
 console.log(externalApiUrl);
 app.get("/fetch-data", async (req, res) => {
   const { query } = req.query;
   try {
     const response = await axios.get(`${externalApiUrl}${query}`);
+    console.log(response);
+    console.log("값 확인");
     res.json(response.data);
   } catch (error) {
     res.status(500).send("Error fetching data from external API");
