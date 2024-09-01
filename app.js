@@ -1,7 +1,6 @@
 const express = require("express");
 // const { createProxyMiddleware } = require("http-proxy-middleware");
-const dotenv = require("dotenv"); //
-dotenv.config(); // node에서 .env 파일 이용하려면 dotenv 설치하고 코드 작성
+require("dotenv").config(); // node에서 CommonJS에서 환경 변수 불러오기 (require) .env 파일 이용하려면 dotenv 설치하고 코드 작성
 const cors = require("cors"); // CORS
 const bodyParser = require("body-parser");
 const axios = require("axios");
