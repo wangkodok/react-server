@@ -81,6 +81,39 @@ app.get("/fetch-data", async (req, res) => {
   }
 });
 
+app.get("/get-search", (req, res) => {
+  console.log(queryResult, "get");
+  const { query } = req.query;
+  console.log(query);
+
+  try {
+    setTimeout(() => {
+      // console.log("External API URL:", externalApiUrl);
+      const response = axios.get(`${externalApiUrl}${queryResult}`);
+      // console.log(response.data.channel.item);
+      res.json(response.data);
+    }, 0);
+  } catch (error) {
+    res.status(500).send("Error fetching data from external API");
+  }
+});
+
+app.post("/post-search", async (req, res) => {
+  queryResult = req.body.queryData; // React에서 보낸 검색어
+  // console.log(req.body.queryData);
+  console.log(queryResult);
+
+  try {
+    const response = await axios.get(`${externalApiUrl}${queryResult}`);
+    res.json(response.data); // json 변환
+    console.log(response.data.channel.item, "리액트에서 보낸 값");
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch data from API" });
+  }
+});
+// end 표준국어대사전 get
+
 app.post("/posts", async (req, res) => {
   const existingPosts = await getStoredPosts();
   const postData = req.body;
