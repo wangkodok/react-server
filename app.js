@@ -68,6 +68,9 @@ app.get("/posts/:id", async (req, res) => {
 const { API_KEY } = process.env;
 // console.log(API_KEY);
 const externalApiUrl = `https://stdict.korean.go.kr/api/search.do?key=${API_KEY}&type_search=search&req_type=json&q=`;
+
+let queryResult = null;
+
 console.log(externalApiUrl);
 app.get("/fetch-data", async (req, res) => {
   const { query } = req.query;
