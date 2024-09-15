@@ -94,7 +94,7 @@ app.get("/get-search", (req, res) => {
   try {
     setTimeout(() => {
       // console.log("External API URL:", externalApiUrl);
-      const response = axios.get(`${externalApiUrl}${queryResult}`);
+      const response = axios.get(`${externalApiUrl}${query}`);
       // console.log(response.data.channel.item);
       res.json(response.data);
     }, 0);
