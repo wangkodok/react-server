@@ -86,8 +86,8 @@ app.get("/fetch-data", async (req, res) => {
 
 app.get("/get-search", (req, res) => {
   console.log(queryResult, "get");
-  const { query } = req.query;
-  console.log(query);
+  const { queryResult } = req.queryResult;
+  console.log(queryResult);
 
   try {
     setTimeout(() => {
