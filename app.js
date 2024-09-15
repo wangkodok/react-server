@@ -109,16 +109,14 @@ app.post("/post-search", async (req, res) => {
   console.log(queryResult, "없음");
 
   try {
-    if (queryResult !== "") {
-      const response = await axios.get(`${externalApiUrl}${queryResult}`);
-      res.json(response.data !== "" ? response.data : "ㅅㄷㄴㅅ"); // json 변환
-      console.log(response.data.channel.item, "리액트에서 보낸 값");
+    const response = await axios.get(`${externalApiUrl}${queryResult}`);
+    if (response.data === "") {
+      res.json("ㅅㄷㄴㅅ");
     } else {
-      console.log("값 오류");
-      return;
+      res.json(response.data); // json 변환
     }
   } catch (error) {
-    console.error(error);
+    console.error(error, "POST에서 오류");
     res.status(500).json({ error: "Failed to fetch data from API" });
   }
 });
