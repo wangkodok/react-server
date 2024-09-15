@@ -27,7 +27,7 @@ app.use(
     origin: [
       // "http://127.0.0.1:5173",
       "https://classy-cendol-a32dcd.netlify.app",
-      "https://korean-dictionary-tan.vercel.app",
+      "https://korean-dictionary-three.vercel.app",
     ], // 모든 출처 허용 옵션 true 를 써도 된다.
     credentials: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
     // optionsSuccessStatus: 200,
@@ -66,7 +66,7 @@ app.get("/posts/:id", async (req, res) => {
 
 // 표준국어대사전 get
 const { API_KEY } = process.env;
-// console.log(API_KEY);
+console.log(API_KEY);
 const externalApiUrl = `https://stdict.korean.go.kr/api/search.do?key=${API_KEY}&type_search=search&req_type=json&q=`;
 
 let queryResult = null;
@@ -74,6 +74,7 @@ let queryResult = null;
 console.log(externalApiUrl);
 app.get("/fetch-data", async (req, res) => {
   const { query } = req.query;
+  console.log(query);
   try {
     const response = await axios.get(`${externalApiUrl}${query}`);
     console.log(response);
@@ -86,8 +87,8 @@ app.get("/fetch-data", async (req, res) => {
 
 app.get("/get-search", (req, res) => {
   console.log(queryResult, "get");
-  const { queryResult } = req.queryResult;
-  console.log(queryResult);
+  const { query } = req.query;
+  console.log(query, "get 값");
 
   try {
     setTimeout(() => {
@@ -104,11 +105,17 @@ app.get("/get-search", (req, res) => {
 app.post("/post-search", async (req, res) => {
   queryResult = req.body.queryData; // React에서 보낸 검색어
   // console.log(req.body.queryData);
-  console.log(queryResult);
+  console.log(queryResult, "없음");
 
   try {
-    const response = await axios.get(`${externalApiUrl}${queryResult}`);
-    res.json(response.data !== "" ? response.data : "ㅅㄷㄴㅅ"); // json 변환
+    if (queryResult !== "") {
+      const response = await axios.get(`${externalApiUrl}${queryResult}`);
+      res.json(response.data !== "" ? response.data : "ㅅㄷㄴㅅ"); // json 변환
+      // console.log(response.data.channel.item, "리액트에서 보낸 값");
+    } else {
+      console.log("값 오류");
+      return;
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to fetch data from API" });
