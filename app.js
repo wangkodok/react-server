@@ -27,7 +27,7 @@ app.use(
     origin: [
       // "http://127.0.0.1:5173",
       "https://classy-cendol-a32dcd.netlify.app",
-      "https://korean-dictionary-three.vercel.app",
+      "https://korean-dictionary-tan.vercel.app",
     ], // 모든 출처 허용 옵션 true 를 써도 된다.
     credentials: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
     // optionsSuccessStatus: 200,
