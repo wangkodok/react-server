@@ -108,8 +108,7 @@ app.post("/post-search", async (req, res) => {
 
   try {
     const response = await axios.get(`${externalApiUrl}${queryResult}`);
-    res.json(response.data); // json 변환
-    console.log(response.data.channel.item, "리액트에서 보낸 값");
+    res.json(response.data !== "" ? response.data : "ㅅㄷㄴㅅ"); // json 변환
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to fetch data from API" });
