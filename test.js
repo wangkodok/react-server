@@ -72,45 +72,54 @@ const externalApiUrl = `https://stdict.korean.go.kr/api/search.do?key=${API_KEY}
 
 let queryResult = null;
 
-app.get("/get-search", async (req, res) => {
-  // if (queryResult !== null) {
-  //   res.json(queryResult);
-  // }
-  const query = req.query.q; // 쿼리 파라미터에서 검색어 가져오기
-  console.log(query, "Received query via GET");
-
+console.log(externalApiUrl);
+app.get("/fetch-data", async (req, res) => {
+  const { query } = req.query;
+  console.log(query);
   try {
     const response = await axios.get(`${externalApiUrl}${query}`);
     console.log(response);
-    console.log(externalApiUrl + query);
-    res.json(response.data); // 검색 결과 반환
-    // if (response.data && response.data.channel) {
-    //   res.json(response.data); // 검색 결과 반환
-    // }
-    // if (response.data !== "") {
-    //   queryResult = response.data;
-    // }
+    console.log("값 확인");
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).send("Error fetching data from external API");
+  }
+});
+
+app.get("/get-search", (req, res) => {
+  console.log(queryResult, "get");
+  const { query } = req.query;
+  console.log(query, "get 값");
+
+  try {
+    setTimeout(() => {
+      // console.log("External API URL:", externalApiUrl);
+      const response = axios.get(`${externalApiUrl}${query}`);
+      // console.log(response.data.channel.item);
+      res.json(response.data);
+    }, 0);
+  } catch (error) {
+    res.status(500).send("Error fetching data from external API");
+  }
+});
+
+app.post("/post-search", async (req, res) => {
+  queryResult = req.body.queryData; // React에서 보낸 검색어
+  // console.log(req.body.queryData);
+  console.log(queryResult, "없음");
+
+  try {
+    const response = await axios.get(`${externalApiUrl}${queryResult}`);
+    if (response.data === "") {
+      res.json("ㅅㄷㄴㅅ");
+    } else {
+      res.json(response.data); // json 변환
+    }
   } catch (error) {
     console.error(error, "POST에서 오류");
     res.status(500).json({ error: "Failed to fetch data from API" });
   }
 });
-
-// app.post("/post-search", async (req, res) => {
-//   queryResult = req.body.queryData; // React에서 보낸 검색어
-//   // console.log(req.body.queryData);
-//   console.log(queryResult, "없음");
-
-//   try {
-//     const response = await axios.get(`${externalApiUrl}${queryResult}`);
-//     if (response.data !== "") {
-//       queryResult = response.data;
-//     }
-//   } catch (error) {
-//     console.error(error, "POST에서 오류");
-//     res.status(500).json({ error: "Failed to fetch data from API" });
-//   }
-// });
 // end 표준국어대사전 get
 
 app.post("/posts", async (req, res) => {
