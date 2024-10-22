@@ -26,9 +26,7 @@ app.use(
   cors({
     origin: [
       // "http://127.0.0.1:5173",
-      "https://classy-cendol-a32dcd.netlify.app",
-      "https://korean-dictionary-three.vercel.app",
-      "https://korean-dictionary-tan.vercel.app",
+      'https://korean-dictionary-tan.vercel.app/',
     ], // 모든 출처 허용 옵션 true 를 써도 된다.
     credentials: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
     // optionsSuccessStatus: 200,
@@ -76,6 +74,7 @@ app.get("/get-search", async (req, res) => {
 
   try {
     const response = await axios.get(`${externalApiUrl}${query}`);
+    console.log(response.data, externalApiUrl + query)
     res.json(response.data);
   } catch (error) {
     res.status(500).send("Error fetching data from external API");
