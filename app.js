@@ -4,7 +4,6 @@ require("dotenv").config(); // node에서 CommonJS에서 환경 변수 불러오
 const cors = require("cors"); // CORS
 const bodyParser = require("body-parser");
 const axios = require("axios");
-const axiosRetry = require("axios-retry"); // axios-retry 불러오기
 
 const { getStoredPosts, storePosts } = require("./data/posts");
 
@@ -45,18 +44,6 @@ app.use(
 //   );
 // };
 
-// axios에 재시도 로직 추가
-axiosRetry(axios, {
-  retries: 3, // 요청을 최대 3번까지 재시도
-  retryDelay: (retryCount) => {
-    return retryCount * 1000; // 재시도 시 1초 간격 (1초, 2초, 3초 점점 증가)
-  },
-  retryCondition: (error) => {
-    // 재시도할 조건 설정 (5xx 오류일 때만 재시도)
-    return error.response && error.response.status >= 500;
-  },
-});
-
 app.set("views", path.join(__dirname, "/"));
 app.set("view engine", "ejs");
 
@@ -95,12 +82,6 @@ app.get("/get-search", async (req, res) => {
     res.json(response.data);
   } catch (error) {
     res.status(500).send("Error fetching data from external API");
-
-    console.error("Error fetching data from external API:", error.message);
-    res.status(500).json({
-      error: "Error fetching data from external API",
-      details: error.message,
-    });
   }
   // // if (queryResult !== null) {
   // //   res.json(queryResult);
