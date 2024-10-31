@@ -4,6 +4,7 @@ require("dotenv").config(); // node에서 CommonJS에서 환경 변수 불러오
 const cors = require("cors"); // CORS
 const bodyParser = require("body-parser");
 const axios = require("axios");
+const axiosRetry = require("axios-retry"); // axios-retry 불러오기
 
 const { getStoredPosts, storePosts } = require("./data/posts");
 
