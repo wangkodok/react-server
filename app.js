@@ -26,7 +26,7 @@ app.use(
   cors({
     origin: [
       // "http://127.0.0.1:5173",
-      'https://korean-dictionary-tan.vercel.app/',
+      "https://korean-dictionary-tan.vercel.app/",
     ], // 모든 출처 허용 옵션 true 를 써도 된다.
     credentials: true, // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
     // optionsSuccessStatus: 200,
@@ -67,7 +67,23 @@ app.get("/posts/:id", async (req, res) => {
 const { API_KEY } = process.env;
 const externalApiUrl = `https://stdict.korean.go.kr/api/search.do?key=${API_KEY}&type_search=search&req_type=json&q=`;
 
-let queryResult = null;
+// 비동기 초기화 함수
+async function initializeServer() {
+  try {
+    // 예: 외부 API 또는 데이터베이스에 연결
+    console.log("Initializing external API connection...");
+
+    const response = await axios.get(externalApiUrl); // 필요한 초기화 요청 예시
+    console.log("API connection successful:", response.data);
+
+    console.log("Server initialization completed.");
+  } catch (error) {
+    console.error("Initialization failed:", error);
+    process.exit(1); // 초기화 실패 시 서버 종료
+  }
+}
+
+// let queryResult = null;
 
 app.get("/get-search", async (req, res) => {
   const { query } = req.query;
@@ -78,7 +94,7 @@ app.get("/get-search", async (req, res) => {
 
   try {
     const response = await axios.get(`${externalApiUrl}${query}`);
-    console.log(response.data, externalApiUrl + query)
+    console.log(response.data, externalApiUrl + query);
     res.json(response.data);
   } catch (error) {
     res.status(500).send("Error fetching data from external API");
@@ -135,4 +151,14 @@ app.post("/posts", async (req, res) => {
   res.status(201).json({ message: "Stored new post.", post: newPost });
 });
 
-app.listen(8000);
+// app.listen(8000);
+
+// 서버 시작 함수
+async function startServer() {
+  await initializeServer(); // 초기화 완료될 때까지 대기
+  app.listen(8000, () => {
+    console.log(`Server is running on port ${8000}`);
+  });
+}
+
+startServer();
