@@ -68,25 +68,54 @@ const { API_KEY } = process.env;
 const externalApiUrl = `https://stdict.korean.go.kr/api/search.do?key=${API_KEY}&type_search=search&req_type=json&q=`;
 
 // 비동기 초기화 함수
-async function initializeServer() {
-  try {
-    // 예: 외부 API 또는 데이터베이스에 연결
-    console.log("Initializing external API connection...");
+// async function initializeServer() {
+//   try {
+//     // 예: 외부 API 또는 데이터베이스에 연결
+//     console.log("Initializing external API connection...");
 
-    const response = await axios.get(externalApiUrl); // 필요한 초기화 요청 예시
-    console.log("API connection successful:", response.data);
+//     const response = await axios.get(externalApiUrl); // 필요한 초기화 요청 예시
+//     console.log("API connection successful:", response.data);
 
-    console.log("Server initialization completed.");
-  } catch (error) {
-    console.error("Initialization failed:", error);
-    process.exit(1); // 초기화 실패 시 서버 종료
-  }
-}
+//     console.log("Server initialization completed.");
+//   } catch (error) {
+//     console.error("Initialization failed:", error);
+//     process.exit(1); // 초기화 실패 시 서버 종료
+//   }
+// }
 
 // let queryResult = null;
 
+app.post("/api/data", async (req, res) => {
+  const query = req.body.query;
+  console.log(query);
+
+  try {
+    // Open API에 GET 요청
+    const response = await axios.get(`${externalApiUrl}${query}`);
+    res.json(response.data); // API 응답을 클라이언트로 전송
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("서버 오류");
+  }
+});
+
+app.post("/api/data", async (req, res) => {
+  const { query } = req.body;
+
+  try {
+    // Open API에 GET 요청 보내기
+    const response = await fetch(`${externalApiUrl}${query}`);
+    const data = await response.json();
+    res.json(data); // 리액트로 응답 전송
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).send("서버 오류");
+  }
+});
+
 app.get("/get-search", async (req, res) => {
   const { query } = req.query;
+  console.log(query, "118");
 
   if (!query) {
     return res.status(400).json({ error: "Query parameter is missing" });
@@ -94,6 +123,7 @@ app.get("/get-search", async (req, res) => {
 
   try {
     const response = await axios.get(`${externalApiUrl}${query}`);
+    console.log(query, "126");
     console.log(response.data, externalApiUrl + query);
     res.json(response.data);
   } catch (error) {
@@ -151,14 +181,14 @@ app.post("/posts", async (req, res) => {
   res.status(201).json({ message: "Stored new post.", post: newPost });
 });
 
-// app.listen(8000);
+app.listen(8000);
 
-// 서버 시작 함수
-async function startServer() {
-  await initializeServer(); // 초기화 완료될 때까지 대기
-  app.listen(8000, () => {
-    console.log(`Server is running on port ${8000}`);
-  });
-}
+// // 서버 시작 함수
+// async function startServer() {
+//   await initializeServer(); // 초기화 완료될 때까지 대기
+//   app.listen(8000, () => {
+//     console.log(`Server is running on port ${8000}`);
+//   });
+// }
 
-startServer();
+// startServer();
